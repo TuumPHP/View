@@ -1,0 +1,26 @@
+{
+  "name":"tuum/view",
+    "description": "adapters for various view template components.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Asao",
+            "email": "kamei@workspot.jp"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "tuum/locator": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/TuumPHP/Locator"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tuum\\View\\": "src/"
+        }
+    }
+}
