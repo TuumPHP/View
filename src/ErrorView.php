@@ -2,6 +2,7 @@
 namespace Tuum\View;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use Tuum\Web\App;
 use Tuum\Web\Http\Response;
 
@@ -27,11 +28,13 @@ class ErrorView
     public $error_files = [];
 
     /**
-     * @param ViewEngineInterface $app
-     */    
-    public function __construct($app)
+     * @param ViewEngineInterface $engine
+     * @param null|LoggerInterface        $logger
+     */
+    public function __construct($engine, $logger=null)
     {
-        $this->engine = $app;
+        $this->engine = $engine;
+        $this->logger = $logger;
     }
 
     /**
@@ -45,6 +48,9 @@ class ErrorView
     {
         $data['message'] = $e->getMessage();
         $code = $e->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR;
+        if( $this->logger ) {
+            $this->logger->critical('ErrorView: caught '.get_class($e) ."({$code}), ".$e->getMessage(), $e->getTrace());
+        }
         $content = $this->render($code, $data);
         echo $content;
         exit;

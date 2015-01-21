@@ -6,7 +6,7 @@ use Tuum\Web\Http\Response;
 
 /** @var App $app */
 
-$view = new ErrorView($app->renderer());
+$view = new ErrorView($app->renderer(), $app->get(App::LOGGER));
 
 /*
  * set up error templates.
