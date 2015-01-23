@@ -28,13 +28,23 @@ class ErrorView
     public $error_files = [];
 
     /**
-     * @param ViewEngineInterface $engine
-     * @param null|LoggerInterface        $logger
+     * @var null|LoggerInterface
      */
-    public function __construct($engine, $logger=null)
+    protected $logger;
+
+    /**
+     * @var bool
+     */
+    protected $debug;
+
+    /**
+     * @param ViewEngineInterface $engine
+     * @param bool        $debug
+     */
+    public function __construct($engine, $debug=false)
     {
         $this->engine = $engine;
-        $this->logger = $logger;
+        $this->debug  = $debug;
     }
 
     /**
@@ -50,6 +60,9 @@ class ErrorView
         $code = $e->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR;
         if( $this->logger ) {
             $this->logger->critical('ErrorView: caught '.get_class($e) ."({$code}), ".$e->getMessage(), $e->getTrace());
+        }
+        if( $this->debug ) {
+            $data['trace'] = $e->getTrace();
         }
         $content = $this->render($code, $data);
         echo $content;
@@ -69,5 +82,13 @@ class ErrorView
         }
         $content = $this->engine->render($error, $data);
         return $content;
+    }
+
+    /**
+     * @param null|LoggerInterface $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
     }
 }
