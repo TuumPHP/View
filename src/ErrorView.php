@@ -3,8 +3,8 @@ namespace Tuum\View;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Tuum\Web\App;
-use Tuum\Web\Http\Response;
+use Tuum\Web\Psr7\Respond;
+use Tuum\Web\Psr7\Response;
 
 class ErrorView
 {
@@ -57,7 +57,7 @@ class ErrorView
     public function __invoke($e)
     {
         $data['message'] = $e->getMessage();
-        $code = $e->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR;
+        $code = $e->getCode() ?: Respond::INTERNAL_ERROR;
         if( $this->logger ) {
             $this->logger->critical('ErrorView: caught '.get_class($e) ."({$code}), ".$e->getMessage(), $e->getTrace());
         }
