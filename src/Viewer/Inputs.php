@@ -1,5 +1,5 @@
 <?php
-namespace Tuum\View;
+namespace Tuum\View\Viewer;
 
 class Inputs
 {

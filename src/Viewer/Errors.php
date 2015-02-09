@@ -1,5 +1,5 @@
 <?php
-namespace Tuum\View;
+namespace Tuum\View\Viewer;
 
 class Errors
 {
@@ -14,12 +14,15 @@ class Errors
     public $format = '<span class="text-danger">%s</span>';
     
     /**
-     * @param null|Inputs $errors
+     * @param array|Inputs $errors
      */
     public function __construct($errors=null)
     {
         if(!$errors) {
             $errors = new Inputs();
+        }
+        elseif(is_array($errors)) {
+            $errors = new Inputs($errors);
         }
         $this->errors = $errors;
     }

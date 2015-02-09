@@ -1,6 +1,7 @@
 <?php
-namespace Tuum\View;
+namespace Tuum\View\Viewer;
 
+use Psr\Http\Message\UriInterface;
 use Traversable;
 
 /**
@@ -13,6 +14,11 @@ use Traversable;
  */
 class View implements \ArrayAccess, \IteratorAggregate
 {
+    /**
+     * @var array
+     */
+    protected $_data_ = [];
+
     /**
      * @var Message
      */
@@ -29,18 +35,34 @@ class View implements \ArrayAccess, \IteratorAggregate
     protected $errors;
 
     /**
-     * @var array
+     * @var UriInterface
      */
-    protected $_data_ = [];
+    public $uri;
 
     /**
      * @ param Message $message
+     *
+     * @param array $data
      */
-    public function __construct()
+    public function __construct($data)
     {
-        $this->inputs = new Inputs();
-        $this->errors = new Errors();
-        $this->message = new Message();
+        $this->inputs = new Inputs($this->bite($data, 'inputs'));
+        $this->errors = new Errors($this->bite($data, 'errors'));
+        $this->message = new Message($this->bite($data, 'messages'));
+        $this->_data_ = $data;
+    }
+
+    /**
+     * @param array  $data
+     * @param string $key
+     * @return array
+     */
+    private function bite(&$data, $key)
+    {
+        if(array_key_exists($key, $data) && is_array($data[$key])) {
+            return $data[$key];
+        }
+        return [];
     }
 
     /**
@@ -57,41 +79,15 @@ class View implements \ArrayAccess, \IteratorAggregate
 
     /**
      * @param string $key
-     * @param mixed $value
+     * @return string
      */
-    public function set($key, $value=null)
+    public function hiddenTag($key)
     {
-        if(is_array($key)) {
-            $this->_data_ = array_merge($this->_data_, $key);
-            return;
+        if ($this->offsetExists($key)) {
+            $value = $this->offsetGet($key);
+            return "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\" />";
         }
-        $this->_data_[$key] = $value;
-        return;
-    }
-
-    /**
-     * @param string $message
-     * @param bool   $error
-     */
-    public function setMessage($message, $error = false)
-    {
-        $this->message->add($message, $error);
-    }
-
-    /**
-     * @param array $input
-     */
-    public function setInput($input)
-    {
-        $this->inputs->setInputs($input);
-    }
-
-    /**
-     * @param array $errors
-     */
-    public function setErrors($errors)
-    {
-        $this->errors->setErrors($errors);
+        return '';
     }
 
     /**
@@ -147,5 +143,28 @@ class View implements \ArrayAccess, \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->_data_);
+    }
+
+    /**
+     * @param UriInterface $uri
+     */
+    public function setUri($uri)
+    {
+        $this->uri = $uri;
+    }
+
+    /**
+     * get data as list (i.e. array).
+     *
+     * @param string $key
+     * @return array
+     */
+    function asList($key)
+    {
+        if( $this->offsetExists($key)) {
+            $value = $this->offsetGet($key);
+            return is_array($value) ? $value : [$value];
+        }
+        return [];
     }
 }
