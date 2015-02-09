@@ -15,6 +15,11 @@ use Traversable;
 class View implements \ArrayAccess, \IteratorAggregate
 {
     /**
+     * @var Inputs
+     */
+    public $values;
+
+    /**
      * @var array
      */
     protected $_data_ = [];
@@ -49,6 +54,7 @@ class View implements \ArrayAccess, \IteratorAggregate
         $this->inputs = new Inputs($this->bite($data, 'inputs'));
         $this->errors = new Errors($this->bite($data, 'errors'));
         $this->message = new Message($this->bite($data, 'messages'));
+        $this->values = new Inputs($data);
         $this->_data_ = $data;
     }
 
@@ -60,9 +66,50 @@ class View implements \ArrayAccess, \IteratorAggregate
     private function bite(&$data, $key)
     {
         if(array_key_exists($key, $data) && is_array($data[$key])) {
-            return $data[$key];
+            $found = $data[$key];
+            unset($data[$key]);
+            return $found;
         }
         return [];
+    }
+
+    /**
+     * search for inputs (old input from previous post), and then
+     * values passed from a controller.
+     *
+     * @param string $key
+     * @return array|mixed|null|string
+     */
+    public function value($key)
+    {
+        if($found = $this->inputs->get($key)) {
+            return $found;
+        }
+        return $this->values->get($key);
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    public function h($string)
+    {
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
+     * same as value method, but strings are escaped for html.
+     *
+     * @param string $key
+     * @return array|mixed|null|string
+     */
+    public function html($key)
+    {
+        $found = $this->value($key);
+        if( is_string($found)) {
+            return $this->h($found);
+        }
+        return $found;
     }
 
     /**

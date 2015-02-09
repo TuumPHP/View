@@ -11,7 +11,7 @@ class Errors
     /**
      * @var string
      */
-    public $format = '<span class="text-danger">%s</span>';
+    public $format = '<p class="text-danger">%s</p>';
     
     /**
      * @param array|Inputs $errors
