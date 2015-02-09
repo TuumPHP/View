@@ -23,17 +23,22 @@ class Inputs
     {
         $this->inputs = $inputs;
     }
-    
+
     /**
-     * @param string $name
-     * @return string|array|mixed
+     * @param string        $name
+     * @param string|null   $option
+     * @return array|mixed|string
      */
-    public function get($name)
+    public function get($name, $option=null)
     {
         $name = str_replace('[]', '', $name);
         parse_str($name, $levels);
         $inputs = $this->inputs;
-        return $this->recurseGet($levels, $inputs);
+        $found = $this->recurseGet($levels, $inputs);
+        if(!is_null($option) && is_array($found)) {
+            return in_array($option, $found) ? $option: null;
+        }
+        return $found;
     }
 
     /**
@@ -47,7 +52,16 @@ class Inputs
             return $inputs;
         }
         list($key, $next) = each($levels);
-        if (isset($inputs[$key])) {
+        // object accessing as property
+        if (is_object($inputs) && isset($inputs->$key)) {
+            return $this->recurseGet($next, $inputs->$key);
+        }
+        // object accessing as ArrayAccess
+        if (is_object($inputs) && $inputs instanceof \ArrayAccess && isset($inputs[$key])) {
+            return $this->recurseGet($next, $inputs[$key]);
+        }
+        // an array
+        if (is_array($inputs) && isset($inputs[$key])) {
             return $this->recurseGet($next, $inputs[$key]);
         }
         return null;
