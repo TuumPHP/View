@@ -89,6 +89,19 @@ class View implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * @param string $key
+     * @return array
+     */
+    public function keysOf($key)
+    {
+        $found = $this->value($key);
+        if(is_array($found)) {
+            return array_keys($found);
+        }
+        return [];
+    }
+
+    /**
      * @param string $string
      * @return string
      */
