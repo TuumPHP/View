@@ -26,16 +26,6 @@ class Renderer implements ViewEngineInterface
     }
 
     /**
-     * @param string $view
-     * @return static
-     */
-    public static function forge($view)
-    {
-        $locator = new Locator($view);
-        return new static($locator);
-    }
-
-    /**
      * @param string $name
      * @param mixed  $service
      */

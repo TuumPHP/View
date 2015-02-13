@@ -1,7 +1,7 @@
 <?php
 namespace tests\Locator;
 
-use Tuum\Locator\Container;
+use Tuum\Locator\Locator;
 use Tuum\View\Tuum\Renderer;
 
 require_once(__DIR__ . '/../autoloader.php');
@@ -16,7 +16,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
     function setup()
     {
         class_exists(Renderer::class);
-        $this->container = Renderer::forge(__DIR__.'/config-view');
+        $this->container = new Renderer(new Locator(__DIR__.'/config-view'));
     }
 
     /**
