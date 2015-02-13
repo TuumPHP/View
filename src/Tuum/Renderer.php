@@ -74,6 +74,7 @@ class Renderer implements ViewEngineInterface
 
     /**
      * a simple renderer for a raw PHP file.
+     * non-polluting execution when rendering a view file.  
      *
      * @param string $file
      * @param array  $data
@@ -82,15 +83,28 @@ class Renderer implements ViewEngineInterface
      */
     public function render($file, $data = [])
     {
-        $this->view_file = $file;
-        $content = $this->doRender($data);
+        $viewer = clone($this);
+        $viewer->view_file = $file;
+        return $viewer->doRender($data);
+    }
+
+    /**
+     * a simple renderer for a raw PHP file.
+     *
+     * @param array  $data
+     * @return string
+     * @throws \Exception
+     */
+    private function doRender($data)
+    {
+        $content = $this->renderViewFile($data);
         if (!isset($this->next)) {
             return $content;
         }
         $this->view_data['_content_'] = $content;
-        return $this->next->doRender($this->view_data);
+        return $this->next->renderViewFile($this->view_data);
     }
-    
+
     /**
      * a simple renderer for a raw PHP file.
      *
@@ -98,7 +112,7 @@ class Renderer implements ViewEngineInterface
      * @return string
      * @throws \Exception
      */
-    private function doRender($__data=[])
+    private function renderViewFile($__data)
     {
         $this->view_data = array_merge($this->view_data, $__data);
         $__file = $this->locator->locate($this->view_file.'.php');
