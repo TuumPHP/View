@@ -41,4 +41,15 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('more', $container->render('more'));
         $this->assertEquals('tested tested', $container->render('tested'));
     }
+
+    /**
+     * @test
+     */
+    function layout()
+    {
+        $viewer = $this->container;
+        $viewer = $viewer->withView('layout/layout1');
+        $output = $viewer->render('test');
+        $this->assertEquals("This is layout#1.\n\ntest\n\nEnd of layout#1.", $output);
+    }
 }

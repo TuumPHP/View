@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\View\Tuum;
 
-use Tuum\Locator\Locator;
 use Tuum\Locator\LocatorInterface;
 use Tuum\View\ViewEngineInterface;
 
@@ -18,11 +17,40 @@ class Renderer implements ViewEngineInterface
     public $services = [];
 
     /**
+     * @var string
+     */
+    private $view_file = null;
+
+    /**
+     * @var array
+     */
+    private $view_data = [];
+    
+    /**
+     * @var Renderer
+     */
+    private $next = null;
+    
+    /**
      * @param LocatorInterface $locator
      */
     public function __construct($locator)
     {
         $this->locator = $locator;
+    }
+
+    /**
+     * @param string $file
+     * @param array  $data
+     * @return Renderer
+     */
+    public function withView($file, $data=[])
+    {
+        $next = clone($this);
+        $next->view_file = $file;
+        $next->view_data = $data;
+        $this->next = $next;
+        return $this;
     }
 
     /**
@@ -36,7 +64,8 @@ class Renderer implements ViewEngineInterface
 
     /**
      * @param string $name
-     * @return null|mixed
+     * @param array  $args
+     * @return mixed|null
      */
     public function __call($name, $args=[])
     {
@@ -47,18 +76,36 @@ class Renderer implements ViewEngineInterface
      * a simple renderer for a raw PHP file.
      *
      * @param string $file
-     * @param array  $__data
+     * @param array  $data
      * @return string
      * @throws \Exception
      */
-    public function render($file, $__data = [])
+    public function render($file, $data = [])
     {
-        $__file = $this->locator->locate($file.'.php');
+        $this->view_file = $file;
+        if (!isset($this->next)) {
+            return $this->doRender($data);
+        }
+        $this->view_data['_content_'] = $this->doRender($data);
+        return $this->next->doRender($this->view_data);
+    }
+    
+    /**
+     * a simple renderer for a raw PHP file.
+     *
+     * @param array $__data
+     * @return string
+     * @throws \Exception
+     */
+    private function doRender($__data=[])
+    {
+        $this->view_data = array_merge($this->view_data, $__data);
+        $__file = $this->locator->locate($this->view_file.'.php');
         if( !$__file ) return '';
         try {
 
             ob_start();
-            extract($__data);
+            extract($this->view_data);
 
             /** @noinspection PhpIncludeInspection */
             include($__file);
@@ -71,5 +118,4 @@ class Renderer implements ViewEngineInterface
             throw $e;
         }
     }
-
 }
