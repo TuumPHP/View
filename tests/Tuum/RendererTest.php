@@ -52,4 +52,14 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $output = $viewer->render('test');
         $this->assertEquals("This is layout#1.\n\ntest\n\nEnd of layout#1.", $output);
     }
+
+    /**
+     * @test
+     */
+    function set_layout_inside_a_view()
+    {
+        $viewer = $this->container;
+        $output = $viewer->render('set_layout_inside_view');
+        $this->assertEquals("This is layout#1.\n\nset layout inside this view.\n\nEnd of layout#1.", $output);
+    }
 }

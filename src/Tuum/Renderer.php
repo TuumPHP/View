@@ -83,10 +83,11 @@ class Renderer implements ViewEngineInterface
     public function render($file, $data = [])
     {
         $this->view_file = $file;
+        $content = $this->doRender($data);
         if (!isset($this->next)) {
-            return $this->doRender($data);
+            return $content;
         }
-        $this->view_data['_content_'] = $this->doRender($data);
+        $this->view_data['_content_'] = $content;
         return $this->next->doRender($this->view_data);
     }
     
