@@ -30,7 +30,10 @@ class Renderer implements ViewEngineInterface
      * @var Renderer
      */
     private $next = null;
-    
+
+    // +----------------------------------------------------------------------+
+    //  construction
+    // +----------------------------------------------------------------------+
     /**
      * @param LocatorInterface $locator
      */
@@ -72,6 +75,59 @@ class Renderer implements ViewEngineInterface
         return array_key_exists($name, $this->services) ? $this->services[$name] : null;
     }
 
+    // +----------------------------------------------------------------------+
+    //  section etc.
+    // +----------------------------------------------------------------------+
+    /**
+     * start capturing a section. 
+     */
+    protected function startSection()
+    {
+        ob_start();
+    }
+
+    /**
+     * end capture with name.
+     * 
+     * @param string $name
+     */
+    protected function endSection($name)
+    {
+        $name = $this->sectionName($name);
+        $this->view_data[$name] = ob_get_clean();
+    }
+
+    /**
+     * get a captured section. 
+     * 
+     * @param string $name
+     * @return string
+     */
+    protected function getSection($name)
+    {
+        $name = $this->sectionName($name);
+        return array_key_exists($name, $this->view_data) ? $this->view_data[$name]: ''; 
+    }
+
+    /**
+     * @return string
+     */
+    protected function getContent()
+    {
+        return $this->getSection('content');
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    private function sectionName($name)
+    {
+        return "__{$name}__";
+    }
+    // +----------------------------------------------------------------------+
+    //  rendering a view file. 
+    // +----------------------------------------------------------------------+
     /**
      * a simple renderer for a raw PHP file.
      * non-polluting execution when rendering a view file.  
@@ -101,7 +157,7 @@ class Renderer implements ViewEngineInterface
         if (!isset($this->next)) {
             return $content;
         }
-        $this->view_data['_content_'] = $content;
+        $this->view_data['__content__'] = $content;
         return $this->next->renderViewFile($this->view_data);
     }
 
@@ -133,4 +189,5 @@ class Renderer implements ViewEngineInterface
             throw $e;
         }
     }
+    // +----------------------------------------------------------------------+
 }
