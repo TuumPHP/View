@@ -73,4 +73,17 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $output = $viewer->render('content_with_section');
         $this->assertEquals("This is layout-with-block.\n\nBlock:\nthis is a block.\n\nContent:\nthis is a content.", $output);
     }
+
+    /**
+     * @test
+     */
+    function setting_layout_inside_view_overwrites_default_layout()
+    {
+        $viewer = $this->container;
+        $output = $viewer->render('set_layout_inside_view');
+
+        $viewer = $this->container;
+        $viewer = $viewer->withView('layout/layout_with_block');
+        $this->assertEquals($output, $viewer->render('set_layout_inside_view'));
+    }
 }
