@@ -25,6 +25,11 @@ class Renderer implements ViewEngineInterface
      * @var array
      */
     private $view_data = [];
+
+    /**
+     * @var array
+     */
+    private $section_data = [];
     
     /**
      * @var Renderer
@@ -93,8 +98,7 @@ class Renderer implements ViewEngineInterface
      */
     protected function endSection($name)
     {
-        $name = $this->sectionName($name);
-        $this->view_data[$name] = ob_get_clean();
+        $this->section_data[$name] = ob_get_clean();
     }
 
     /**
@@ -105,8 +109,15 @@ class Renderer implements ViewEngineInterface
      */
     protected function getSection($name)
     {
-        $name = $this->sectionName($name);
-        return array_key_exists($name, $this->view_data) ? $this->view_data[$name]: ''; 
+        return array_key_exists($name, $this->section_data) ? $this->section_data[$name]: ''; 
+    }
+
+    /**
+     * @param array $data
+     */
+    protected function setSectionData(array $data)
+    {
+        $this->section_data = $data;
     }
 
     /**
@@ -115,15 +126,6 @@ class Renderer implements ViewEngineInterface
     protected function getContent()
     {
         return $this->getSection('content');
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    private function sectionName($name)
-    {
-        return "__{$name}__";
     }
     // +----------------------------------------------------------------------+
     //  rendering a view file. 
@@ -157,8 +159,10 @@ class Renderer implements ViewEngineInterface
         if (!isset($this->next)) {
             return $content;
         }
-        $this->view_data['__content__'] = $content;
-        return $this->next->renderViewFile($this->view_data);
+        $this->section_data['content'] = $content;
+        $next = clone($this->next);
+        $next->setSectionData($this->section_data);
+        return $next->renderViewFile($this->view_data);
     }
 
     /**
