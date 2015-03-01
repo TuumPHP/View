@@ -98,6 +98,9 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $viewer = $this->container;
         $viewer->register('test', $service);
 
+        $testing = $viewer->service('test');
+        $this->assertSame($service, $testing);
+
         /** @noinspection PhpUndefinedMethodInspection */
         $testing = $viewer->test();
         $this->assertSame($service, $testing);

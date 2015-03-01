@@ -72,12 +72,21 @@ class Renderer implements ViewEngineInterface
 
     /**
      * @param string $name
+     * @return mixed
+     */
+    public function service($name)
+    {
+        return array_key_exists($name, $this->services) ? $this->services[$name] : null;
+    }
+    
+    /**
+     * @param string $name
      * @param array  $args
      * @return mixed|null
      */
     public function __call($name, $args=[])
     {
-        return array_key_exists($name, $this->services) ? $this->services[$name] : null;
+        return $this->service($name);
     }
 
     // +----------------------------------------------------------------------+
