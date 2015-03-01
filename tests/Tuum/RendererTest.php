@@ -86,4 +86,20 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $viewer = $viewer->withView('layout/layout_with_block');
         $this->assertEquals($output, $viewer->render('set_layout_inside_view'));
     }
+
+    /**
+     * @test
+     */    
+    function register_service_and_retrieve_it()
+    {
+        $service = new \stdClass();
+        $service->tested = 'done';
+        
+        $viewer = $this->container;
+        $viewer->register('test', $service);
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $testing = $viewer->test();
+        $this->assertSame($service, $testing);
+    }
 }
