@@ -132,7 +132,7 @@ class Renderer implements ViewEngineInterface
     /**
      * @return string
      */
-    protected function getContent()
+    public function getContent()
     {
         return $this->getSection('content');
     }
@@ -164,11 +164,10 @@ class Renderer implements ViewEngineInterface
      */
     private function doRender($data)
     {
-        $content = $this->renderViewFile($data);
+        $this->section_data['content'] = $this->renderViewFile($data);
         if (!isset($this->next)) {
-            return $content;
+            return $this->section_data['content'];
         }
-        $this->section_data['content'] = $content;
         $next = clone($this->next);
         $next->setSectionData($this->section_data);
         return $next->renderViewFile($this->view_data);

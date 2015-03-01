@@ -105,4 +105,28 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $testing = $viewer->test();
         $this->assertSame($service, $testing);
     }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     */
+    function exception()
+    {
+        $this->container->render('exception-test');
+    }
+
+    /**
+     * @test
+     */
+    function exception_does_not_change_ob_level()
+    {
+        $this->assertEquals(1, ob_get_level());
+        try {
+            $this->container->render('exception-test');
+            $this->assertTrue(false);
+        } catch( \Exception $e) {
+            $this->assertTrue(true);
+        }
+        $this->assertEquals(1, ob_get_level());
+    }
 }
