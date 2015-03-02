@@ -140,6 +140,21 @@ class Renderer implements ViewEngineInterface
     //  rendering a view file. 
     // +----------------------------------------------------------------------+
     /**
+     * render a block, without default layout.
+     *
+     * @param string $file
+     * @param array  $data
+     * @return string
+     */
+    public function block($file, $data=[])
+    {
+        $viewer = clone($this);
+        $viewer->next      = null;
+        $viewer->view_file = $file;
+        return $viewer->doRender($data);
+    }
+
+    /**
      * a simple renderer for a raw PHP file.
      * non-polluting execution when rendering a view file.  
      *
