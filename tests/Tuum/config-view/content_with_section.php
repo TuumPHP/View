@@ -3,6 +3,6 @@ $this->startSection();
 ?>
 this is a block.
 <?php
-$this->endSection('block');
+$this->endSectionAs('block');
 ?>
 this is a content.

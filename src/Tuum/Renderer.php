@@ -79,7 +79,10 @@ class Renderer implements ViewEngineInterface
      */
     public function service($name)
     {
-        return array_key_exists($name, $this->services) ? $this->services[$name] : null;
+        if (!array_key_exists($name, $this->services)) {
+            throw new \RuntimeException('no such service in Renderer: '. $name);
+        }
+        return $this->services[$name];
     }
     
     /**
@@ -108,7 +111,7 @@ class Renderer implements ViewEngineInterface
      * 
      * @param string $name
      */
-    protected function endSection($name)
+    protected function endSectionAs($name)
     {
         $this->section_data[$name] = ob_get_clean();
     }
@@ -151,10 +154,9 @@ class Renderer implements ViewEngineInterface
      */
     public function block($file, $data=[])
     {
-        $viewer = clone($this);
-        $viewer->next_file      = null;
-        $viewer->view_file = $file;
-        return $viewer->doRender($data);
+        $block = clone($this);
+        $block->next_file = null;
+        return $block->doRender($file, $data);
     }
 
     /**
@@ -169,19 +171,20 @@ class Renderer implements ViewEngineInterface
     public function render($file, $data = [])
     {
         $viewer = clone($this);
-        $viewer->view_file = $file;
-        return $viewer->doRender($data);
+        return $viewer->doRender($file, $data);
     }
 
     /**
      * a simple renderer for a raw PHP file.
      *
+     * @param string $file
      * @param array  $data
      * @return string
      * @throws \Exception
      */
-    private function doRender($data)
+    private function doRender($file, $data)
     {
+        $this->view_file = $file;
         $this->view_data = array_merge($this->view_data, $data);
         $this->section_data['content'] = $this->renderViewFile();
         if (!isset($this->next_file)) {
@@ -190,7 +193,7 @@ class Renderer implements ViewEngineInterface
         $next_view = clone($this);
         $next_view->next_file = null;
         $next_view->setSectionData($this->section_data);
-        return $next_view->render($this->next_file, $this->next_data);
+        return $next_view->doRender($this->next_file, $this->next_data);
     }
 
     /**
