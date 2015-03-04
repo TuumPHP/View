@@ -32,9 +32,14 @@ class Renderer implements ViewEngineInterface
     private $section_data = [];
     
     /**
-     * @var Renderer
+     * @var string
      */
-    private $next = null;
+    private $next_file = null;
+
+    /**
+     * @var array
+     */
+    private $next_data;
 
     // +----------------------------------------------------------------------+
     //  construction
@@ -54,10 +59,8 @@ class Renderer implements ViewEngineInterface
      */
     public function withView($file, $data=[])
     {
-        $next = clone($this);
-        $next->view_file = $file;
-        $next->view_data = $data;
-        $this->next = $next;
+        $this->next_file = $file;
+        $this->next_data = $data;
         return $this;
     }
 
@@ -149,7 +152,7 @@ class Renderer implements ViewEngineInterface
     public function block($file, $data=[])
     {
         $viewer = clone($this);
-        $viewer->next      = null;
+        $viewer->next_file      = null;
         $viewer->view_file = $file;
         return $viewer->doRender($data);
     }
@@ -179,25 +182,25 @@ class Renderer implements ViewEngineInterface
      */
     private function doRender($data)
     {
-        $this->section_data['content'] = $this->renderViewFile($data);
-        if (!isset($this->next)) {
+        $this->view_data = array_merge($this->view_data, $data);
+        $this->section_data['content'] = $this->renderViewFile();
+        if (!isset($this->next_file)) {
             return $this->section_data['content'];
         }
-        $next = clone($this->next);
-        $next->setSectionData($this->section_data);
-        return $next->renderViewFile($this->view_data);
+        $next_view = clone($this);
+        $next_view->next_file = null;
+        $next_view->setSectionData($this->section_data);
+        return $next_view->render($this->next_file, $this->next_data);
     }
 
     /**
      * a simple renderer for a raw PHP file.
      *
-     * @param array $__data
      * @return string
      * @throws \Exception
      */
-    private function renderViewFile($__data)
+    private function renderViewFile()
     {
-        $this->view_data = array_merge($this->view_data, $__data);
         $__file = $this->locator->locate($this->view_file.'.php');
         if( !$__file ) return '';
         try {
