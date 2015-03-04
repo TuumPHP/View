@@ -48,7 +48,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
     function layout()
     {
         $viewer = $this->container;
-        $viewer = $viewer->withView('layout/layout1');
+        $viewer = $viewer->setLayout('layout/layout1');
         $output = $viewer->render('test');
         $this->assertEquals("This is layout#1.\n\ntest\n\nEnd of layout#1.", $output);
     }
@@ -69,7 +69,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
     function layout_with_block()
     {
         $viewer = $this->container;
-        $viewer = $viewer->withView('layout/layout_with_block');
+        $viewer = $viewer->setLayout('layout/layout_with_block');
         $output = $viewer->render('content_with_section');
         $this->assertEquals("This is layout-with-block.\n\nBlock:\nthis is a block.\n\nContent:\nthis is a content.", $output);
     }
@@ -83,7 +83,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $output = $viewer->render('set_layout_inside_view');
 
         $viewer = $this->container;
-        $viewer = $viewer->withView('layout/layout_with_block');
+        $viewer = $viewer->setLayout('layout/layout_with_block');
         $this->assertEquals($output, $viewer->render('set_layout_inside_view'));
     }
 

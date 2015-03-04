@@ -34,12 +34,12 @@ class Renderer implements ViewEngineInterface
     /**
      * @var string
      */
-    private $next_file = null;
+    private $layout_file = null;
 
     /**
      * @var array
      */
-    private $next_data;
+    private $layout_data;
 
     // +----------------------------------------------------------------------+
     //  construction
@@ -57,10 +57,10 @@ class Renderer implements ViewEngineInterface
      * @param array  $data
      * @return Renderer
      */
-    public function withView($file, $data=[])
+    public function setLayout($file, $data=[])
     {
-        $this->next_file = $file;
-        $this->next_data = $data;
+        $this->layout_file = $file;
+        $this->layout_data = $data;
         return $this;
     }
 
@@ -155,7 +155,7 @@ class Renderer implements ViewEngineInterface
     public function block($file, $data=[])
     {
         $block = clone($this);
-        $block->next_file = null;
+        $block->layout_file = null;
         return $block->doRender($file, $data);
     }
 
@@ -187,13 +187,13 @@ class Renderer implements ViewEngineInterface
         $this->view_file = $file;
         $this->view_data = array_merge($this->view_data, $data);
         $this->section_data['content'] = $this->renderViewFile();
-        if (!isset($this->next_file)) {
+        if (!isset($this->layout_file)) {
             return $this->section_data['content'];
         }
-        $next_view = clone($this);
-        $next_view->next_file = null;
-        $next_view->setSectionData($this->section_data);
-        return $next_view->doRender($this->next_file, $this->next_data);
+        $layout = clone($this);
+        $layout->layout_file = null;
+        $layout->setSectionData($this->section_data);
+        return $layout->doRender($this->layout_file, $this->layout_data);
     }
 
     /**
