@@ -22,6 +22,11 @@ class Renderer implements ViewEngineInterface
     private $view_file = null;
 
     /**
+     * @var string
+     */
+    private $view_extension = 'php';
+
+    /**
      * @var array
      */
     private $view_data = [];
@@ -61,6 +66,16 @@ class Renderer implements ViewEngineInterface
     {
         $this->layout_file = $file;
         $this->layout_data = $data;
+        return $this;
+    }
+
+    /**
+     * @param string $ext
+     * @return $this
+     */
+    public function setFileExtension($ext)
+    {
+        $this->view_extension = $ext;
         return $this;
     }
 
@@ -204,7 +219,7 @@ class Renderer implements ViewEngineInterface
      */
     private function renderViewFile()
     {
-        $__file = $this->locator->locate($this->view_file.'.php');
+        $__file = $this->locator->locate($this->view_file.'.'.$this->view_extension);
         if( !$__file ) return '';
         try {
 
