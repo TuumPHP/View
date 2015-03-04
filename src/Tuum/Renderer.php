@@ -19,7 +19,7 @@ class Renderer implements ViewEngineInterface
     /**
      * @var string
      */
-    private $view_file = null;
+    private $view_name = null;
 
     /**
      * @var string
@@ -77,6 +77,14 @@ class Renderer implements ViewEngineInterface
     {
         $this->view_extension = $ext;
         return $this;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getPath()
+    {
+        return $this->locator->locate($this->view_name.'.'.$this->view_extension);
     }
 
     /**
@@ -199,7 +207,7 @@ class Renderer implements ViewEngineInterface
      */
     private function doRender($file, $data)
     {
-        $this->view_file = $file;
+        $this->view_name = $file;
         $this->view_data = array_merge($this->view_data, $data);
         $this->section_data['content'] = $this->renderViewFile();
         if (!isset($this->layout_file)) {
@@ -219,7 +227,7 @@ class Renderer implements ViewEngineInterface
      */
     private function renderViewFile()
     {
-        $__file = $this->locator->locate($this->view_file.'.'.$this->view_extension);
+        $__file = $this->getPath();
         if( !$__file ) return '';
         try {
 
