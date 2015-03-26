@@ -124,7 +124,7 @@ class Renderer implements ViewEngineInterface
     /**
      * start capturing a section. 
      */
-    protected function startSection()
+    public function startSection()
     {
         ob_start();
     }
@@ -134,7 +134,7 @@ class Renderer implements ViewEngineInterface
      * 
      * @param string $name
      */
-    protected function endSectionAs($name)
+    public function endSectionAs($name)
     {
         $this->section_data[$name] = ob_get_clean();
     }
@@ -145,7 +145,7 @@ class Renderer implements ViewEngineInterface
      * @param string $name
      * @return string
      */
-    protected function getSection($name)
+    public function getSection($name)
     {
         return array_key_exists($name, $this->section_data) ? $this->section_data[$name]: ''; 
     }
@@ -180,6 +180,17 @@ class Renderer implements ViewEngineInterface
         $block = clone($this);
         $block->layout_file = null;
         return $block->doRender($file, $data);
+    }
+
+    /**
+     * @param string $file
+     * @param string $section
+     * @param array  $data
+     */    
+    public function blockAsSection($file, $section, $data=[])
+    {
+        $block = $this->block($file, $data);
+        $this->section_data[$section] = $block;
     }
 
     /**
