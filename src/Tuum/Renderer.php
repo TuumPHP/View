@@ -303,7 +303,7 @@ class Renderer implements ViewEngineInterface
             /** @noinspection PhpIncludeInspection */
             include($__file);
 
-            return ob_get_clean();
+            return trim(ob_get_clean(), "\n");
 
         } catch (\Exception $e) {
 

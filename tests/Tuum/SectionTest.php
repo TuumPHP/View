@@ -36,8 +36,7 @@ class SectionTest extends \PHPUnit_Framework_TestCase
 block menu
 
 #Section: content
-    
-This is block content.
+    This is block content.
 This is sub block. ', $view);
     }
 
@@ -56,9 +55,7 @@ This is sub block. ', $view);
 
 
 #Section: content
-    
-
-This is full case view. ', $view);
+    This is full case view. ', $view);
     }
 
     /**
@@ -79,9 +76,7 @@ none, full, marked
 
 
 #Section: content
-    
-
-This is full case view. ', $view);
+    This is full case view. ', $view);
     }
 
     /**
