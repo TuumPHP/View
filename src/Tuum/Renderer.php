@@ -7,6 +7,11 @@ use Tuum\View\ViewEngineInterface;
 class Renderer implements ViewEngineInterface
 {
     /**
+     * do not render section if the section has this value. 
+     */
+    const NO_SECTION_RENDER = false;
+    
+    /**
      * @var LocatorInterface
      */
     public $locator;
@@ -148,6 +153,56 @@ class Renderer implements ViewEngineInterface
     public function getSection($name)
     {
         return array_key_exists($name, $this->section_data) ? $this->section_data[$name]: ''; 
+    }
+
+    /**
+     * @param string $name
+     */
+    public function markSectionNoRender($name)
+    {
+        $this->section_data[$name] = self::NO_SECTION_RENDER;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function sectionExists($name)
+    {
+        return array_key_exists($name, $this->section_data);
+    }
+    
+    /**
+     * render the part of template as $name section. 
+     * will not render if the section is marked as NO_RENDER
+     * 
+     * @param string $name
+     */
+    public function renderAsSection($name)
+    {
+        $content = ob_get_clean();
+        if($this->getSection($name) !== self::NO_SECTION_RENDER) {
+            echo $content;
+        }
+        unset($content);
+    }
+
+    /**
+     * render the part of a template or render $name section if it exist.
+     * 
+     * @param string $name
+     */
+    public function replaceBySection($name)
+    {
+        $content = ob_get_clean();
+        if($this->getSection($name) === self::NO_SECTION_RENDER) {
+        }
+        elseif($this->sectionExists($name)) {
+            echo $this->getSection($name);
+        } else {
+            echo $content;
+        }
+        unset($content);
     }
 
     /**
