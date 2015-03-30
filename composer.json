@@ -10,8 +10,6 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "league/plates": "3.*",
-    "aura/view": "2.*",
     "tuum/locator": "0.*"
   },
   "repositories": [

@@ -2,7 +2,7 @@
 namespace tests\Locator;
 
 use Tuum\Locator\Locator;
-use Tuum\View\Tuum\Renderer;
+use Tuum\View\Renderer;
 
 require_once(__DIR__ . '/../autoloader.php');
 

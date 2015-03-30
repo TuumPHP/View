@@ -1,4 +1,4 @@
-<?php /** @var \Tuum\View\Tuum\Renderer $this */ ?>
+<?php /** @var \Tuum\View\Renderer $this */ ?>
 #Section Layout
 
 #Section: breadcrumb

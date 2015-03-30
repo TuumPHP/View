@@ -1,5 +1,5 @@
 <?php
-namespace Tuum\View\Tuum;
+namespace Tuum\View;
 
 use Tuum\Locator\LocatorInterface;
 use Tuum\View\ViewEngineInterface;
