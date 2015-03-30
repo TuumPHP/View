@@ -169,7 +169,13 @@ class Renderer implements ViewEngineInterface
      */
     public function sectionExists($name)
     {
-        return array_key_exists($name, $this->section_data);
+        $names = func_get_args();
+        foreach($names as $name) {
+            if(array_key_exists($name, $this->section_data)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
