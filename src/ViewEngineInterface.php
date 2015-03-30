@@ -11,12 +11,6 @@ namespace Tuum\View;
 interface ViewEngineInterface
 {
     /**
-     * @param string $name
-     * @param mixed  $service
-     */
-    public function register($name, $service);
-
-    /**
      * a simple renderer for a raw PHP file.
      *
      * @param string $file
