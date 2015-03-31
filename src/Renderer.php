@@ -2,7 +2,6 @@
 namespace Tuum\View;
 
 use Tuum\Locator\LocatorInterface;
-use Tuum\View\ViewEngineInterface;
 
 class Renderer implements ViewEngineInterface
 {
