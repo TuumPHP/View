@@ -49,7 +49,7 @@ class Value
     /**
      * @var callable
      */
-    private $escape = 'Tuum\View\Value::htmlSafe';
+    private $escape = ['Tuum\View\Values\Value','htmlSafe'];
 
     /**
      * @param null|callable $escape
@@ -62,20 +62,20 @@ class Value
     }
 
     /**
-     * escape for html output.
-     *
-     * @param string $string
-     * @return string
+     * @param array $data
+     * @return $this
      */
-    protected static function htmlSafe($string)
+    public function forge($data)
     {
-        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+        $blank = clone($this);
+        $blank->setup($data);
+        return $blank;
     }
 
     /**
      * @param array $data
      */
-    public function setup($data)
+    private function setup($data)
     {
         /**
          * @param string $key
@@ -98,6 +98,17 @@ class Value
         $this->message = Message::forge($bite(self::MESSAGE));
         $this->uri     = $bite(self::URI);
         $this->data    = Data::forge($bite(), $this->getEscape());
+    }
+
+    /**
+     * escape for html output.
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function htmlSafe($string)
+    {
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
     }
 
     // +----------------------------------------------------------------------+
@@ -140,5 +151,13 @@ class Value
         return function ($value) {
             return $this->escape($value);
         };
+    }
+
+    /**
+     * @param callable $escape
+     */
+    public function setEscape($escape)
+    {
+        $this->escape = $escape;
     }
 }

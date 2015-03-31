@@ -3,7 +3,7 @@ namespace Tuum\View\Values;
 
 use Traversable;
 
-class Data
+class Data implements \ArrayAccess
 {
     /**
      * @var array|object
@@ -107,7 +107,8 @@ class Data
      */
     public function hiddenTag($key)
     {
-        if ($value = $this->get($key)) {
+        if ($this->offsetExists($key)) {
+            $value = $this->get($key);
             return "<input type='hidden' name='{$key}' value='{$value}' />";
         }
         return '';
@@ -131,5 +132,44 @@ class Data
     public function getIterator()
     {
         return new \ArrayIterator($this->data);
+    }
+
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->data);
+    }
+
+    /**
+     * @param mixed
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->data[$offset] = $value;
+    }
+
+    /**
+     * @param mixed $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        if ($this->offsetExists($offset)) {
+            unset($this->data[$offset]);
+        }
     }
 }
