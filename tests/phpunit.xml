@@ -12,6 +12,7 @@
         >
     <testsuites>
         <testsuite name="WScore/Pile Test Suite">
+            <directory>Viewer</directory>
             <directory>Tuum</directory>
         </testsuite>
     </testsuites>
