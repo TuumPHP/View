@@ -1,7 +1,6 @@
 <?php
 namespace Tuum\View;
 
-use Psr\Http\Message\UriInterface;
 use Tuum\View\Helper\Data;
 use Tuum\View\Helper\Errors;
 use Tuum\View\Helper\Escape;
@@ -35,11 +34,6 @@ class DataView
      * @var Errors
      */
     public $errors;
-
-    /**
-     * @var UriInterface
-     */
-    public $uri;
 
     /**
      * @var callable|Escape
