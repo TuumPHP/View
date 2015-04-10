@@ -3,7 +3,7 @@ namespace Tuum\View\Helper;
 
 use Traversable;
 
-class Data implements \ArrayAccess
+class Data implements \ArrayAccess, \IteratorAggregate
 {
     /**
      * @var array|object
