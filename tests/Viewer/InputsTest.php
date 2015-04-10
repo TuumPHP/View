@@ -107,4 +107,29 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(true === $input->get('test[true]'));
         $this->assertEquals('tested', $input->get('test[test]'));
     }
+
+    /**
+     * @test
+     */
+    function inputs_in_readme_example()
+    {
+        $data  = [
+            'name' => '<my> name',
+            'gender' => 'male',
+            'types' => [ 'a', 'c' ],
+            'sns' => [
+                'twitter' => 'example@twitter.com',
+                'facebook' => 'example@facebook.com',
+            ],
+        ];
+        $input = Inputs::forge($data);
+
+        $this->assertEquals('&lt;my&gt; name', $input->get('name'));
+        $this->assertEquals(' checked', $input->checked('gender', 'male'));
+        $this->assertEquals('', $input->checked('gender', 'female'));
+        $this->assertEquals(['a','c'], $input->get('types'));
+        $this->assertEquals(' checked', $input->checked('types', 'a'));
+        $this->assertEquals('', $input->checked('types', 'b'));
+        $this->assertEquals('example@twitter.com', $input->get('sns[twitter]'));
+    }
 }
