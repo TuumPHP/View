@@ -6,10 +6,10 @@ use Tuum\Locator\LocatorInterface;
 class Renderer implements ViewEngineInterface
 {
     /**
-     * do not render section if the section has this value. 
+     * do not render section if the section has this value.
      */
     const NO_SECTION_RENDER = false;
-    
+
     /**
      * @var LocatorInterface
      */
@@ -39,7 +39,7 @@ class Renderer implements ViewEngineInterface
      * @var array
      */
     private $section_data = [];
-    
+
     /**
      * @var string
      */
@@ -66,7 +66,7 @@ class Renderer implements ViewEngineInterface
      * @param array  $data
      * @return Renderer
      */
-    public function setLayout($file, $data=[])
+    public function setLayout($file, $data = [])
     {
         $this->layout_file = $file;
         $this->layout_data = $data;
@@ -88,7 +88,7 @@ class Renderer implements ViewEngineInterface
      */
     public function getPath()
     {
-        return $this->locator->locate($this->view_name.'.'.$this->view_extension);
+        return $this->locator->locate($this->view_name . '.' . $this->view_extension);
     }
 
     /**
@@ -107,17 +107,17 @@ class Renderer implements ViewEngineInterface
     public function service($name)
     {
         if (!array_key_exists($name, $this->services)) {
-            throw new \RuntimeException('no such service in Renderer: '. $name);
+            throw new \RuntimeException('no such service in Renderer: ' . $name);
         }
         return $this->services[$name];
     }
-    
+
     /**
      * @param string $name
      * @param array  $args
      * @return mixed|null
      */
-    public function __call($name, $args=[])
+    public function __call($name, $args = [])
     {
         return $this->service($name);
     }
@@ -126,7 +126,7 @@ class Renderer implements ViewEngineInterface
     //  section etc.
     // +----------------------------------------------------------------------+
     /**
-     * start capturing a section. 
+     * start capturing a section.
      */
     public function startSection()
     {
@@ -135,7 +135,7 @@ class Renderer implements ViewEngineInterface
 
     /**
      * end capture with name.
-     * 
+     *
      * @param string $name
      */
     public function endSectionAs($name)
@@ -144,14 +144,14 @@ class Renderer implements ViewEngineInterface
     }
 
     /**
-     * get a captured section. 
-     * 
+     * get a captured section.
+     *
      * @param string $name
      * @return string
      */
     public function getSection($name)
     {
-        return array_key_exists($name, $this->section_data) ? $this->section_data[$name]: ''; 
+        return array_key_exists($name, $this->section_data) ? $this->section_data[$name] : '';
     }
 
     /**
@@ -169,24 +169,24 @@ class Renderer implements ViewEngineInterface
     public function sectionExists($name)
     {
         $names = func_get_args();
-        foreach($names as $name) {
-            if(array_key_exists($name, $this->section_data)) {
+        foreach ($names as $name) {
+            if (array_key_exists($name, $this->section_data)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
-     * render the part of template as $name section. 
+     * render the part of template as $name section.
      * will not render if the section is marked as NO_RENDER
-     * 
+     *
      * @param string $name
      */
     public function renderAsSection($name)
     {
         $content = ob_get_clean();
-        if($this->getSection($name) !== self::NO_SECTION_RENDER) {
+        if ($this->getSection($name) !== self::NO_SECTION_RENDER) {
             echo $content;
         }
         unset($content);
@@ -194,15 +194,14 @@ class Renderer implements ViewEngineInterface
 
     /**
      * render the part of a template or render $name section if it exist.
-     * 
+     *
      * @param string $name
      */
     public function replaceBySection($name)
     {
         $content = ob_get_clean();
-        if($this->getSection($name) === self::NO_SECTION_RENDER) {
-        }
-        elseif($this->sectionExists($name)) {
+        if ($this->getSection($name) === self::NO_SECTION_RENDER) {
+        } elseif ($this->sectionExists($name)) {
             echo $this->getSection($name);
         } else {
             echo $content;
@@ -235,9 +234,9 @@ class Renderer implements ViewEngineInterface
      * @param array  $data
      * @return string
      */
-    public function block($file, $data=[])
+    public function block($file, $data = [])
     {
-        $block = clone($this);
+        $block              = clone($this);
         $block->layout_file = null;
         return $block->doRender($file, $data);
     }
@@ -246,16 +245,16 @@ class Renderer implements ViewEngineInterface
      * @param string $file
      * @param string $section
      * @param array  $data
-     */    
-    public function blockAsSection($file, $section, $data=[])
+     */
+    public function blockAsSection($file, $section, $data = [])
     {
-        $block = $this->block($file, $data);
+        $block                        = $this->block($file, $data);
         $this->section_data[$section] = $block;
     }
 
     /**
      * a simple renderer for a raw PHP file.
-     * non-polluting execution when rendering a view file.  
+     * non-polluting execution when rendering a view file.
      *
      * @param string $file
      * @param array  $data
@@ -278,13 +277,13 @@ class Renderer implements ViewEngineInterface
      */
     private function doRender($file, $data)
     {
-        $this->view_name = $file;
-        $this->view_data = array_merge($this->view_data, $data);
+        $this->view_name               = $file;
+        $this->view_data               = array_merge($this->view_data, $data);
         $this->section_data['content'] = $this->renderViewFile();
         if (!isset($this->layout_file)) {
             return $this->section_data['content'];
         }
-        $layout = clone($this);
+        $layout              = clone($this);
         $layout->layout_file = null;
         $layout->setSectionData($this->section_data);
         return $layout->doRender($this->layout_file, $this->layout_data);
@@ -299,7 +298,9 @@ class Renderer implements ViewEngineInterface
     private function renderViewFile()
     {
         $__file = $this->getPath();
-        if( !$__file ) return '';
+        if (!$__file) {
+            return '';
+        }
         try {
 
             ob_start();

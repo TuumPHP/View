@@ -27,7 +27,7 @@ class Data implements \ArrayAccess
     public function __construct($data = [], $escape = null)
     {
         $this->data   = $data;
-        $this->escape = $escape ?: ['Tuum\View\Helper\Escape','htmlSafe'];
+        $this->escape = $escape ?: ['Tuum\View\Helper\Escape', 'htmlSafe'];
     }
 
     /**

@@ -6,7 +6,7 @@ class Escape
     /**
      * @var callable
      */
-    private $escape = ['Tuum\View\Helper\Escape','htmlSafe'];
+    private $escape = ['Tuum\View\Helper\Escape', 'htmlSafe'];
 
     /**
      * @param null|callable $escape
@@ -37,7 +37,7 @@ class Escape
     {
         return $this->escape($string);
     }
-    
+
     /**
      * escapes a string using $this->escape.
      *
@@ -69,7 +69,7 @@ class Escape
      */
     public function withEscape($escape)
     {
-        $self = clone($this);
+        $self         = clone($this);
         $self->escape = $escape;
         return $self;
     }

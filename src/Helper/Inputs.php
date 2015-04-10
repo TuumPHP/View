@@ -35,9 +35,9 @@ class Inputs
         if (!static::$self) {
             static::$self = new static();
         }
-        $blank = clone(static::$self);
+        $blank         = clone(static::$self);
         $blank->inputs = $data;
-        $blank->escape = $escape ?: ['Tuum\View\Helper\Escape','htmlSafe'];
+        $blank->escape = $escape ?: ['Tuum\View\Helper\Escape', 'htmlSafe'];
         return $blank;
     }
 
@@ -93,7 +93,7 @@ class Inputs
             if (is_array($found)) {
                 return in_array($value, $found);
             }
-            return (string) $value === (string) $found;
+            return (string)$value === (string)$found;
         }
         return true;
     }

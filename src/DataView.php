@@ -39,7 +39,7 @@ class DataView
      * @var callable|Escape
      */
     public $escape;
-    
+
     /**
      * @param null|callable $escape
      */

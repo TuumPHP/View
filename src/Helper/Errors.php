@@ -16,7 +16,7 @@ class Errors
     /**
      * @param array|Inputs $errors
      */
-    private function __construct($errors=[])
+    private function __construct($errors = [])
     {
         $this->errors = Inputs::forge($errors);
     }
@@ -46,7 +46,9 @@ class Errors
     public function get($name)
     {
         $msg = $this->raw($name);
-        if(!$msg) return '';
+        if (!$msg) {
+            return '';
+        }
         return sprintf($this->format, $msg);
     }
 

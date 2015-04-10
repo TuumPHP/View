@@ -81,8 +81,8 @@ class Message
                 $messages[$type] = $msg;
             }
         }
-        foreach($messages as $msg) {
-            if($msg) {
+        foreach ($messages as $msg) {
+            if ($msg) {
                 return $this->show($msg);
             }
         }

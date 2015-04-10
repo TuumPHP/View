@@ -15,15 +15,15 @@ class ErrorView
 
     /**
      * default error file name.
-     * 
-     * @var string      
+     *
+     * @var string
      */
     public $default_error_file = 'errors/error';
 
     /**
      * error file names for each status code.
-     * 
-     * @var array        
+     *
+     * @var array
      */
     public $error_files = [];
 
@@ -39,29 +39,30 @@ class ErrorView
 
     /**
      * @param ViewEngineInterface $engine
-     * @param bool        $debug
+     * @param bool                $debug
      */
-    public function __construct($engine, $debug=false)
+    public function __construct($engine, $debug = false)
     {
         $this->engine = $engine;
         $this->debug  = $debug;
     }
 
     /**
-     * error handler for production environment. 
+     * error handler for production environment.
      * returns a response with error page.
-     * 
+     *
      * @param Exception $e
      * @return Response
      */
     public function __invoke($e)
     {
         $data['message'] = $e->getMessage();
-        $code = $e->getCode() ?: Respond::INTERNAL_ERROR;
-        if( $this->logger ) {
-            $this->logger->critical('ErrorView: caught '.get_class($e) ."({$code}), ".$e->getMessage(), $e->getTrace());
+        $code            = $e->getCode() ?: Respond::INTERNAL_ERROR;
+        if ($this->logger) {
+            $this->logger->critical('ErrorView: caught ' . get_class($e) . "({$code}), " . $e->getMessage(),
+                $e->getTrace());
         }
-        if( $this->debug ) {
+        if ($this->debug) {
             $data['trace'] = $e->getTrace();
         }
         $content = $this->render($code, $data);
@@ -73,11 +74,11 @@ class ErrorView
      * @param int   $code
      * @param array $data
      * @return string
-     */    
-    public function render($code, $data=[])
+     */
+    public function render($code, $data = [])
     {
-        $error = isset( $this->error_files[$code] ) ? $this->error_files[$code] : $this->default_error_file;
-        if( !$error ) {
+        $error = isset($this->error_files[$code]) ? $this->error_files[$code] : $this->default_error_file;
+        if (!$error) {
             return '';
         }
         $content = $this->engine->render($error, $data);

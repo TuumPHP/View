@@ -3,8 +3,8 @@ namespace Tuum\View;
 
 /**
  * Interface RendererInterface
- * 
- * an interface for rendering a view file or a template. 
+ *
+ * an interface for rendering a view file or a template.
  *
  * @package Tuum\View
  */
