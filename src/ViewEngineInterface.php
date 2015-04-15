@@ -19,4 +19,21 @@ interface ViewEngineInterface
      * @throws \Exception
      */
     public function render($file, $data = []);
+
+    /**
+     * set layout file.
+     *
+     * @param string $file
+     * @param array  $data
+     * @return $this
+     */
+    public function setLayout($file, $data = []);
+
+    /**
+     * set root directory of template files.
+     *
+     * @param $dir
+     * @return $this
+     */
+    public function setRoot($dir);
 }

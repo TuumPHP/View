@@ -64,12 +64,22 @@ class Renderer implements ViewEngineInterface
     /**
      * @param string $file
      * @param array  $data
-     * @return Renderer
+     * @return $this
      */
     public function setLayout($file, $data = [])
     {
         $this->layout_file = $file;
         $this->layout_data = $data;
+        return $this;
+    }
+
+    /**
+     * @param $dir
+     * @return $this
+     */
+    public function setRoot($dir)
+    {
+        $this->locator->addRoot($dir);
         return $this;
     }
 
