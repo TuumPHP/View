@@ -267,8 +267,8 @@ class Renderer implements ViewEngineInterface
      * a simple renderer for a raw PHP file.
      * non-polluting execution when rendering a view file.
      *
-     * @param string $file
-     * @param array  $data
+     * @param string|callable $file
+     * @param array           $data
      * @return string
      * @throws \Exception
      */
@@ -281,15 +281,15 @@ class Renderer implements ViewEngineInterface
     /**
      * a simple renderer for a raw PHP file.
      *
-     * @param string $file
-     * @param array  $data
+     * @param string|callable $file
+     * @param array           $data
      * @return string
      * @throws \Exception
      */
     private function doRender($file, $data)
     {
         $this->view_data               = array_merge($this->view_data, $data);
-        if(is_callable($file)) {
+        if (is_callable($file)) {
             $this->section_data['content'] = $file();
         } else {
             $this->view_file               = $this->getPath($file);
