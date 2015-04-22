@@ -166,6 +166,17 @@ class Renderer implements ViewEngineInterface
     }
 
     /**
+     * @param string       $name
+     * @param string|mixed $data
+     * @return $this
+     */
+    public function setSection($name, $data)
+    {
+        $this->section_data[$name] = $data;
+        return $this;
+    }
+
+    /**
      * @param string $name
      */
     public function markSectionNoRender($name)
@@ -291,8 +302,11 @@ class Renderer implements ViewEngineInterface
         $this->view_data               = array_merge($this->view_data, $data);
         if (is_callable($file)) {
             $this->section_data['content'] = $file();
-        } else {
-            $this->view_file               = $this->getPath($file);
+        }
+        elseif(!$this->view_file = $this->getPath($file)) {
+            return null;
+        }
+        else {
             $this->section_data['content'] = $this->renderViewFile();
         }
         if (!isset($this->layout_file)) {
