@@ -13,7 +13,7 @@ interface ViewEngineInterface
     /**
      * a simple renderer for a raw PHP file.
      *
-     * @param string $file
+     * @param string|callable $file
      * @param array  $data
      * @return string
      * @throws \Exception
