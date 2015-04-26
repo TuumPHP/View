@@ -3,7 +3,7 @@ namespace Tuum\View;
 
 use Tuum\Locator\LocatorInterface;
 
-class Renderer implements ViewEngineInterface
+class Renderer
 {
     /**
      * do not render section if the section has this value.
