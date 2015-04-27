@@ -45,11 +45,6 @@ class Renderer
      */
     private $layout_file = null;
 
-    /**
-     * @var array
-     */
-    private $layout_data;
-
     // +----------------------------------------------------------------------+
     //  construction
     // +----------------------------------------------------------------------+
@@ -66,10 +61,10 @@ class Renderer
      * @param array  $data
      * @return $this
      */
-    public function setLayout($file, $data = [])
+    public function setLayout($file, array $data = [])
     {
         $this->layout_file = $file;
-        $this->layout_data = $data;
+        $this->view_data   = array_merge($this->view_data, $data);
         return $this;
     }
 
@@ -315,7 +310,7 @@ class Renderer
         $layout              = clone($this);
         $layout->layout_file = null;
         $layout->setSectionData($this->section_data);
-        return $layout->doRender($this->layout_file, $this->layout_data);
+        return $layout->doRender($this->layout_file, $this->view_data);
     }
 
     /**
