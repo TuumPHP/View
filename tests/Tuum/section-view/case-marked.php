@@ -1,6 +1,6 @@
 <?php /** @var \Tuum\View\Renderer $this */ ?>
-<?php $this->markSectionNoRender('bread'); ?>
+<?php $this->section->markNotToRender('bread'); ?>
 
-<?php $this->markSectionNoRender('menu'); ?>
+<?php $this->section->markNotToRender('menu'); ?>
 
 This is full case view. 

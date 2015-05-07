@@ -3,6 +3,13 @@ namespace Tuum\View;
 
 use Tuum\Locator\LocatorInterface;
 
+/**
+ * Class Renderer
+ *
+ * @package Tuum\View
+ *          
+ * @property Section $section
+ */
 class Renderer
 {
     /**
@@ -14,6 +21,11 @@ class Renderer
      * @var LocatorInterface
      */
     public $locator;
+
+    /**
+     * @var Section
+     */
+    private $section;
 
     /**
      * @var array
@@ -36,11 +48,6 @@ class Renderer
     private $view_data = [];
 
     /**
-     * @var array
-     */
-    private $section_data = [];
-
-    /**
      * @var string
      */
     private $layout_file = null;
@@ -50,10 +57,12 @@ class Renderer
     // +----------------------------------------------------------------------+
     /**
      * @param LocatorInterface $locator
+     * @param null|Section     $section
      */
-    public function __construct($locator)
+    public function __construct($locator, $section=null)
     {
         $this->locator = $locator;
+        $this->section = $section ?: new Section();
     }
 
     /**
@@ -125,122 +134,10 @@ class Renderer
      */
     public function __call($name, $args = [])
     {
+        if ($name === 'section') return $this->section;
         return $this->service($name);
     }
 
-    // +----------------------------------------------------------------------+
-    //  section etc.
-    // +----------------------------------------------------------------------+
-    /**
-     * start capturing a section.
-     */
-    public function startSection()
-    {
-        ob_start();
-    }
-
-    /**
-     * end capture with name.
-     *
-     * @param string $name
-     */
-    public function endSectionAs($name)
-    {
-        $this->section_data[$name] = ob_get_clean();
-    }
-
-    /**
-     * get a captured section.
-     *
-     * @param string $name
-     * @return string
-     */
-    public function getSection($name)
-    {
-        return array_key_exists($name, $this->section_data) ? $this->section_data[$name] : '';
-    }
-
-    /**
-     * @param string       $name
-     * @param string|mixed $data
-     * @return $this
-     */
-    public function setSection($name, $data)
-    {
-        $this->section_data[$name] = $data;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function markSectionNoRender($name)
-    {
-        $this->section_data[$name] = self::NO_SECTION_RENDER;
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function sectionExists($name)
-    {
-        $names = func_get_args();
-        foreach ($names as $name) {
-            if (array_key_exists($name, $this->section_data)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * render the part of template as $name section.
-     * will not render if the section is marked as NO_RENDER
-     *
-     * @param string $name
-     */
-    public function renderAsSection($name)
-    {
-        $content = ob_get_clean();
-        if ($this->getSection($name) !== self::NO_SECTION_RENDER) {
-            echo $content;
-        }
-        unset($content);
-    }
-
-    /**
-     * render the part of a template or render $name section if it exist.
-     *
-     * @param string $name
-     */
-    public function replaceBySection($name)
-    {
-        $content = ob_get_clean();
-        if ($this->getSection($name) === self::NO_SECTION_RENDER) {
-        } elseif ($this->sectionExists($name)) {
-            echo $this->getSection($name);
-        } else {
-            echo $content;
-        }
-        unset($content);
-    }
-
-    /**
-     * @param array $data
-     */
-    protected function setSectionData(array $data)
-    {
-        $this->section_data = $data;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->getSection('content');
-    }
     // +----------------------------------------------------------------------+
     //  rendering a view file. 
     // +----------------------------------------------------------------------+
@@ -265,8 +162,7 @@ class Renderer
      */
     public function blockAsSection($file, $section, $data = [])
     {
-        $block                        = $this->block($file, $data);
-        $this->section_data[$section] = $block;
+        $this->section->set($section, $this->block($file, $data));
     }
 
     /**
@@ -296,20 +192,19 @@ class Renderer
     {
         $this->view_data               = array_merge($this->view_data, $data);
         if (is_callable($file)) {
-            $this->section_data['content'] = $file();
+            $this->section->set('content', $file());
         }
         elseif(!$this->view_file = $this->getPath($file)) {
             return null;
         }
         else {
-            $this->section_data['content'] = $this->renderViewFile();
+            $this->section->set('content', $this->renderViewFile());
         }
         if (!isset($this->layout_file)) {
-            return $this->section_data['content'];
+            return $this->section->get('content');
         }
         $layout              = clone($this);
         $layout->layout_file = null;
-        $layout->setSectionData($this->section_data);
         return $layout->doRender($this->layout_file, $this->view_data);
     }
 

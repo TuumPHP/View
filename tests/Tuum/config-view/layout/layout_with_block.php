@@ -1,7 +1,7 @@
 This is layout-with-block.
 
 Block:
-<?= $this->getSection('block'); ?>
+<?= $this->section->get('block'); ?>
 
 Content:
-<?= $this->getContent(); ?>
+<?= $this->section->get('content'); ?>

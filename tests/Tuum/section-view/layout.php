@@ -2,22 +2,22 @@
 #Section Layout
 
 #Section: breadcrumb
-<?php $this->startSection(); ?>
+<?php $this->section->start('bread'); ?>
     bread-top
-    <?= $this->getSection('bread'); ?>
-<?php $this->renderAsSection('bread'); ?>
+    <?= $this->section->get('bread'); ?>
+<?php $this->section->renderAs(); ?>
 
 
 #Section: menu
-<?php $this->startSection(); ?>
+<?php $this->section->start('menu'); ?>
     menu-top
-    <?= $this->getSection('menu'); ?>
-<?php $this->replaceBySection('menu'); ?>
+    <?= $this->section->get('menu'); ?>
+<?php $this->section->replaceBy(); ?>
 
 
 #Section: content
-<?php if ($this->sectionExists('content')): ?>
-    <?= $this->getContent(); ?>
+<?php if ($this->section->exists('content')): ?>
+    <?= $this->section->get('content'); ?>
 <?php else: ?>
     Welcome Section Test
 <?php endif; ?>
