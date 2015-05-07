@@ -109,11 +109,11 @@ class Section
     {
         $content = $this->get($name);
         if ($content === self::NO_SECTION_RENDER) {
-            ob_get_clean();
+            ob_end_clean();
 
             return; // do not render anything.
         } elseif ($content) {
-            ob_get_clean();
+            ob_end_clean();
             echo $content;
         } else {
             echo ob_get_clean();
