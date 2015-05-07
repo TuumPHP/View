@@ -1,10 +1,10 @@
 <?php /** @var \Tuum\View\Renderer $this */ ?>
-<?php $this->section->start('bread'); ?>
+<?php $this->section->start(); ?>
 full
-<?php $this->section->save(); ?>
+<?php $this->section->saveAs('bread'); ?>
 
-<?php $this->section->start('menu'); ?>
+<?php $this->section->start(); ?>
 none, full, marked
-<?php $this->section->save(); ?>
+<?php $this->section->saveAs('menu'); ?>
 
 This is full case view. 

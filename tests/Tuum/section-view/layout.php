@@ -2,17 +2,17 @@
 #Section Layout
 
 #Section: breadcrumb
-<?php $this->section->start('bread'); ?>
+<?php $this->section->start(); ?>
     bread-top
     <?= $this->section->get('bread'); ?>
-<?php $this->section->renderAs(); ?>
+<?php $this->section->renderAs('bread'); ?>
 
 
 #Section: menu
-<?php $this->section->start('menu'); ?>
+<?php $this->section->start(); ?>
     menu-top
     <?= $this->section->get('menu'); ?>
-<?php $this->section->replaceBy(); ?>
+<?php $this->section->replaceBy('menu'); ?>
 
 
 #Section: content

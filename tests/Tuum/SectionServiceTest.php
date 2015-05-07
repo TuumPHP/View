@@ -28,9 +28,9 @@ class SectionServiceTest extends \PHPUnit_Framework_TestCase
      */
     function start_and_saves_captures_output()
     {
-        $this->sec->start('test1');
+        $this->sec->start();
         echo 'this is a test';
-        $this->sec->save();
+        $this->sec->saveAs('test1');
         $this->assertEquals( 'this is a test', $this->sec->get('test1'));
     }
 
@@ -39,12 +39,12 @@ class SectionServiceTest extends \PHPUnit_Framework_TestCase
      */
     function nested_start_and_saves_captures_output()
     {
-        $this->sec->start('test1');
+        $this->sec->start();
         echo 'this is #1 test. ';
-        $this->sec->start('test2');
+        $this->sec->start();
         echo 'this is #2 test. ';
-        $this->sec->save();
-        $this->sec->save();
+        $this->sec->saveAs('test2');
+        $this->sec->saveAs('test1');
         $this->assertEquals( 'this is #2 test. ', $this->sec->get('test2'));
         $this->assertEquals( 'this is #1 test. this is #2 test. ', $this->sec->get('test1'));
     }
@@ -55,9 +55,9 @@ class SectionServiceTest extends \PHPUnit_Framework_TestCase
     function renderAs_renders_section()
     {
         ob_start();
-        $this->sec->start('renderAs');
+        $this->sec->start();
         echo 'this is a test';
-        $this->sec->renderAs();
+        $this->sec->renderAs('renderAs');
         $output = ob_get_clean();
         $this->assertEquals( 'this is a test', $output);
     }
@@ -69,9 +69,9 @@ class SectionServiceTest extends \PHPUnit_Framework_TestCase
     {
         ob_start();
         $this->sec->markNotToRender('renderAs');
-        $this->sec->start('renderAs');
+        $this->sec->start();
         echo 'this is a test';
-        $this->sec->renderAs();
+        $this->sec->renderAs('renderAs');
         $output = ob_get_clean();
         $this->assertEquals( '', $output);
     }
@@ -82,9 +82,9 @@ class SectionServiceTest extends \PHPUnit_Framework_TestCase
     function replaceBy_renders_section()
     {
         ob_start();
-        $this->sec->start('replaceBy');
+        $this->sec->start();
         echo 'this is a test';
-        $this->sec->replaceBy();
+        $this->sec->replaceBy('replaceBy');
         $output = ob_get_clean();
         $this->assertEquals( 'this is a test', $output);
     }
@@ -96,9 +96,9 @@ class SectionServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->sec->set('replaceBy', 'replaced text');
         ob_start();
-        $this->sec->start('replaceBy');
+        $this->sec->start();
         echo 'this is a test';
-        $this->sec->replaceBy();
+        $this->sec->replaceBy('replaceBy');
         $output = ob_get_clean();
         $this->assertEquals( 'replaced text', $output);
     }
@@ -110,9 +110,9 @@ class SectionServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->sec->markNotToRender('replaceBy');
         ob_start();
-        $this->sec->start('replaceBy');
+        $this->sec->start();
         echo 'this is a test';
-        $this->sec->replaceBy();
+        $this->sec->replaceBy('replaceBy');
         $output = ob_get_clean();
         $this->assertEquals( '', $output);
     }

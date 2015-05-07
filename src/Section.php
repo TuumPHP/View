@@ -13,52 +13,27 @@ class Section
      */
     private $section_data = [];
 
-    /**
-     * @var string[]
-     */
-    private $ob_list = [];
-
+    private $ob_level = 0;
+    
     /**
      * start capturing a section.
-     *
-     * @param string $name
      */
-    public function start($name)
+    public function start()
     {
-        $this->ob_list[] = $name;
+        $this->ob_level ++;
         ob_start();
     }
 
     /**
-     * @return string
-     */
-    private function obPop()
-    {
-        if (empty($this->ob_list)) {
-            return null;
-        }
-        return array_pop($this->ob_list);
-    }
-
-    /**
-     * @return bool
-     */
-    private function obEmpty()
-    {
-        return empty($this->ob_list);
-    }
-
-    /**
      * end capture with name.
+     *
+     * @param $name
      */
-    public function save()
+    public function saveAs($name)
     {
-        $name = $this->obPop();
-        if (!$name) {
-            return;
-        }
         $this->section_data[$name] = ob_get_clean();
-        if (!$this->obEmpty()) {
+        $this->ob_level--;
+        if ($this->ob_level) {
             echo $this->section_data[$name];
         }
     }
@@ -82,6 +57,7 @@ class Section
     public function set($name, $data)
     {
         $this->section_data[$name] = $data;
+
         return $this;
     }
 
@@ -105,18 +81,18 @@ class Section
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * render the part of template as $name section.
      * will not render if the section is marked as NO_RENDER
+     *
+     * @param string $name
      */
-    public function renderAs()
+    public function renderAs($name)
     {
-        if (!$name = $this->obPop()) {
-            return ;
-        }
         if ($this->get($name) !== self::NO_SECTION_RENDER) {
             echo ob_get_clean();
         } else {
@@ -126,15 +102,15 @@ class Section
 
     /**
      * render the part of a template only if section $name does not exist.
+     *
+     * @param string $name
      */
-    public function replaceBy()
+    public function replaceBy($name)
     {
-        if (!$name = $this->obPop()) {
-            return ;
-        }
         $content = $this->get($name);
         if ($content === self::NO_SECTION_RENDER) {
             ob_get_clean();
+
             return; // do not render anything.
         } elseif ($content) {
             ob_get_clean();

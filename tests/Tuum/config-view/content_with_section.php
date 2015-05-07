@@ -1,8 +1,8 @@
 <?php
-$this->section->start('block');
+$this->section->start();
 ?>
 this is a block.
 <?php
-$this->section->save();
+$this->section->saveAs('block');
 ?>
 this is a content.
