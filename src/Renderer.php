@@ -129,10 +129,9 @@ class Renderer
 
     /**
      * @param string $name
-     * @param array  $args
      * @return mixed|null
      */
-    public function __call($name, $args = [])
+    public function __get($name)
     {
         if ($name === 'section') return $this->section;
         return $this->service($name);
@@ -231,6 +230,22 @@ class Renderer
             ob_end_clean();
             throw $e;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->section->get('content');
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent($content)
+    {
+        $this->section->set('content', $content);
     }
     // +----------------------------------------------------------------------+
 }
