@@ -3,7 +3,7 @@ View Template
 
 Started as a simple raw PHP based template class, this project has __matured__ to be a full featured template component with ability set layouts, sections, and blocks. 
 
-*   Status: alfa. works as is, but subject to change its API. 
+*   Status: alpha release. 
 *   Immutable: Mostly.
 *   PSR: Psr-1, Psr-2, and Psr-4.
 
@@ -22,7 +22,7 @@ composer require "tuum/view: 0.2.*"
 Requires Tuum\Locator component. 
 
 
-Usage
+Getting Started
 -----
 
 Constructing the renderer: 
@@ -45,7 +45,8 @@ Some=<?= $some; ?>
 </html>
 ```
 
-### Using Layout
+Using Layout
+----
 
 You can set a default layout in the renderer: 
 
@@ -71,37 +72,37 @@ In a layout file, emit content (from the initial template file) using ```$this->
 
 ```php
 This is layout#1.
-<?= $this->getContent(); ?>
+<?= $this->section-getContent(); ?>
 
 End of layout#1.
 ```
 
 
-### Using Section
+Using Section
+----
 
-#### in template file
+### in template file
 
-In a template file, define a section using ```$this->startSection()``` 
-and ```$this->endSection('block')```,
+In a template file, define a section using ```$this->section->start()``` 
+and ```$this->section->saveAs('block')```,
 
 ```php
-<?php
-$this->startSection();
-?>
+<?php $this-> section->start(); ?>
+
 this is a block.
-<?php
-$this->endSection('block');
-?>
+
+<?php $this->section->saveAs('block'); ?>
+
 this is a content.
 ```
 
-#### inl layout file
+### in layout file
 
 In a layout file, use the defined section as:
 
 ```php
 Block:
-<?= $this->getSection('block'); ?>
+<?= $this->section->get('block'); ?>
 
 Content:
 <?= $this->getContent(); ?>
@@ -112,48 +113,53 @@ Done:
 You can check if a section is defined:
 
 ```php
-<?php if ($this->sectionExists('content')): ?>
+<?php if ($this->section->exists('content')): ?>
     <?= $this->getContent(); ?>
 <?php else: ?>
     Welcome Section Test
 <?php endif; ?>
 ```
 
+#### replaceBy method
+
 Using ```replaceBySection``` in layout file may make it clearer... 
 
 ```php
-<?php $this->startSection(); ?>
+<?php $this->section->start(); ?>
     Welcome Section Test
-<?php $this->replaceBySection('content'); ?>
+<?php $this->section->replaceBy('content'); ?>
 ```
 
-#### disabling a section in layout
+```replacedBy``` method will take the output from a section (from ```start()``` till ```replacedBy()``` method) and checks if the named section exists or not. If the section exists, it outputs the existing section, or outputs the section in the layout. 
 
-In the template file, it is possible to set a section not to be displayed at all by using ```markSectionNoRender ``` method. 
+### disabling a section in layout
+
+In the template file, it is possible to set a section not to be displayed at all by using ```markNotToRender``` method. 
 
 In template file: 
 
 ```php
-<?php $this->markSectionNoRender('bread'); ?>
+<?php $this->section->markNotToRender('bread'); ?>
 ```
 
 In layout file:
 
 ```php
-<?php $this->startSection(); ?>
+<?php $this->section->start(); ?>
 <ol>
     <li>bread-top</li>
     <?= $this->getSection('bread'); ?>
 </ol>
-<?php $this->renderAsSection('bread'); ?>
+<?php $this->section->renderAs('bread'); ?>
 ```
 
-Because the ```bread``` sectuib us marked as NoRender, the entire bread section will not be rendered. 
+Because the ```bread``` section is marked as NotToRender, the entire bread section will not be rendered. 
 
 This also works for ```replaceBySection``` as well. So, for the example for ```replaceBySection('content')``` will not be displayed at all if marked as NoDisplay. 
 
 
-### Using Block
+Using Block
+----
 
 To include another template, use ```block``` method in a template file as:
 
@@ -162,6 +168,8 @@ To include another template, use ```block``` method in a template file as:
 ```
 
 The ```block-sub``` is another template file. The template's data is shared with the block template. 
+
+### blockAsSection method
 
 Some times, one might want to use a block as a section (well, I do). So, here's an easy way to do. 
 
