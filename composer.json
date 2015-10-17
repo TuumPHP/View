@@ -10,7 +10,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "tuum/locator": "0.*"
+    "tuum/locator": "1.x@dev"
   },
   "repositories": [
   ],
