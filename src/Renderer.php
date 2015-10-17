@@ -197,7 +197,7 @@ class Renderer
             return null;
         }
         else {
-            $this->section->set('content', $this->renderViewFile());
+            $this->setContent($this->renderViewFile());
         }
         if (!isset($this->layout_file)) {
             return $this->section->get('content');

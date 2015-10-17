@@ -129,4 +129,30 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals(1, ob_get_level());
     }
+
+    /**
+     * @test
+     */
+    function setRoot_adds_another_view_root()
+    {
+        $html = $this->container->render('tested');
+        $this->assertEquals('', $html);
+        
+        $this->container->setRoot(__DIR__.'/config-view/tested');
+        $html = $this->container->render('tested');
+        $this->assertEquals('tested tested', $html);
+    }
+
+    /**
+     * @test
+     */
+    function set_extension()
+    {
+        $html = $this->container->render('extension');
+        $this->assertEquals('', $html);
+
+        $this->container->setFileExtension('view.php');
+        $html = $this->container->render('extension');
+        $this->assertEquals('tested extension', $html);
+    }
 }
