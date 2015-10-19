@@ -155,4 +155,18 @@ class RendererTest extends \PHPUnit_Framework_TestCase
         $html = $this->container->render('extension');
         $this->assertEquals('tested extension', $html);
     }
+
+    /**
+     * @test
+     */
+    function render_with_array_sets_section()
+    {
+        $html = $this->container->render([
+            'content' => 'tested array content',
+            'test' => 'tested',
+        ]);
+        $this->assertEquals('tested array content', $html);
+        $this->assertEquals('tested array content', $this->container->getContent());
+        $this->assertEquals('tested', $this->container->section->get('test'));
+    }
 }

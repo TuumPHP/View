@@ -168,7 +168,7 @@ class Renderer
      * a simple renderer for a raw PHP file.
      * non-polluting execution when rendering a view file.
      *
-     * @param string|callable $file
+     * @param string|array $file
      * @param array           $data
      * @return string
      * @throws \Exception
@@ -182,7 +182,7 @@ class Renderer
     /**
      * a simple renderer for a raw PHP file.
      *
-     * @param string|callable $file
+     * @param string|array $file
      * @param array           $data
      * @return string
      * @throws \Exception
@@ -190,8 +190,10 @@ class Renderer
     private function doRender($file, $data)
     {
         $this->view_data               = array_merge($this->view_data, $data);
-        if (is_callable($file)) {
-            $this->section->set('content', $file());
+        if (is_array($file)) {
+            foreach($file as $key => $val) {
+                $this->section->set($key, $val);
+            }
         }
         elseif(!$this->view_file = $this->getPath($file)) {
             return null;
