@@ -11,8 +11,8 @@
          syntaxCheck="false"
         >
     <testsuites>
-        <testsuite name="WScore/Pile Test Suite">
-            <directory>Viewer</directory>
+        <testsuite name="Tuum/View test suites">
+            <directory>Locator</directory>
             <directory>Tuum</directory>
         </testsuite>
     </testsuites>

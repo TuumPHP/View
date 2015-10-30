@@ -1,8 +1,6 @@
 <?php
 namespace Tuum\View;
 
-use Tuum\Locator\LocatorInterface;
-
 /**
  * Class Renderer
  *
@@ -63,6 +61,15 @@ class Renderer
     {
         $this->locator = $locator;
         $this->section = $section ?: new Section();
+    }
+
+    /**
+     * @param string $view_dir
+     * @return Renderer
+     */
+    public static function forge($view_dir)
+    {
+        return new self(new Locator($view_dir), new Section());
     }
 
     /**
