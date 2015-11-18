@@ -1,49 +1,57 @@
 View Template
 ===========
 
-Started as a simple raw PHP based template class, this project has __matured__ to be a full featured template component with ability set layouts, sections, and blocks. 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TuumPHP/View/badges/quality-score.png?b=1.x)](https://scrutinizer-ci.com/g/TuumPHP/View/?branch=1.x)
 
-*   Status: alpha release. 
-*   Immutable: Mostly.
-*   PSR: Psr-1, Psr-2, and Psr-4.
+A raw PHP based template with sections, block, and layout, but *no escaping functions*.
 
-This package focuses on rendering only; the escaping strings are done by helpers.  
+To escape values displayed in a template, use other packages, such as [Tuum/Form](https://github.com/TuumPHP/Form).  
 
 ### Licence
 
 MIT Licence
 
-### Installation
+### PSR
 
-```sh
-composer require "tuum/view: 0.2.*"
-```
-
-Requires Tuum\Locator component. 
-
+PSR-1, PSR-2, and PSR-4.
 
 Getting Started
 -----
 
+### Installation
+
+```sh
+composer require "tuum/view: ^1.0"
+```
+
+### Sample Code
+
 Constructing the renderer: 
 
 ```php
-use Tuum\Locator\Locator;
-use Tuum\View\Tuum\Renderer;
+$view = new Tuum\View\Renderer(
+    new Tuum\View\Locator('/path/to/view/')
+); // or alternatively,
+$view = Tuum\View\Renderer::forge('/path/to/view');
+```
 
-$viewer = new Renderer(new Locator('/path/to/view/'));
-$viewer->render('file-name', [ 
+To render a PHP template file, 
+
+```php
+$view->render('my/file-name', [ 
   'some' => 'data' 
 ]);
 ```
 
-The template file at ```/path/to/view/file-name.php``` may be: 
+The template file at `/path/to/view/my/file-name.php` may be: 
 
 ```php
 <html>
 Some=<?= $some; ?>
 </html>
 ```
+
+**The Tuum/View does not escape the value**. Please use helpers to escape before displaying the values. 
 
 Using Layout
 ----

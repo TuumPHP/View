@@ -1,6 +1,6 @@
 {
   "name": "tuum/view",
-  "description": "adapters for various view template components.",
+  "description": "raw PHP template renderer that does not escape.",
   "license": "MIT",
   "authors": [
     {
@@ -8,11 +8,8 @@
       "email": "kamei@workspot.jp"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
   },
-  "repositories": [
-  ],
   "autoload": {
     "psr-4": {
       "Tuum\\View\\": "src/"
