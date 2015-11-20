@@ -18,7 +18,7 @@ class Renderer
     /**
      * @var LocatorInterface
      */
-    public $locator;
+    private $locator;
 
     /**
      * @var Section
@@ -28,7 +28,7 @@ class Renderer
     /**
      * @var array
      */
-    public $services = [];
+    private $services = [];
 
     /**
      * @var string
