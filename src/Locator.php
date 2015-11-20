@@ -1,8 +1,6 @@
 <?php
 namespace Tuum\View;
 
-use SplStack;
-
 class Locator implements LocatorInterface
 {
     /**
