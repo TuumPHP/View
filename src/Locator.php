@@ -6,9 +6,9 @@ use SplStack;
 class Locator implements LocatorInterface
 {
     /**
-     * @var SplStack|string[]
+     * @var string[]
      */
-    protected $dirs = [];
+    private $dirs = [];
 
     /**
      * @param string $root

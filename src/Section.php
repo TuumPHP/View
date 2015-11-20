@@ -13,6 +13,9 @@ class Section
      */
     private $section_data = [];
 
+    /**
+     * @var int
+     */
     private $ob_level = 0;
     
     /**
