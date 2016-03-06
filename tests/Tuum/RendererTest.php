@@ -166,7 +166,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
             'test' => 'tested',
         ]);
         $this->assertEquals('tested array content', $html);
-        $this->assertEquals('tested array content', $this->container->getContent());
-        $this->assertEquals('tested', $this->container->section->get('test'));
+        $this->assertEquals('', $this->container->getContent());
+        $this->assertEquals('', $this->container->section->get('test'));
     }
 }

@@ -256,5 +256,13 @@ class Renderer
     {
         $this->section->set('content', $content);
     }
+
+    /**
+     * should not share section. 
+     */
+    public function __clone()
+    {
+        $this->section = clone $this->section;
+    }
     // +----------------------------------------------------------------------+
 }
